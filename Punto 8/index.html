@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Consumiendo una API con JavaScript</title>
+  <meta charset="utf-8">
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin-top: 50px;
+      background: violet;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #008CBA;
+      border: none;
+      color: white;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    ul {
+      list-style: none;
+      margin-top: 20px;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 10px;
+    }
+
+    li a {
+      text-decoration: none;
+      color: #008CBA;
+      font-weight: bold;
+    }
+
+    li a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>Repositorios de GitHub</h1>
+  <input type="text" id="username" placeholder="Nombre de usuario">
+  <button onclick="getRepositories()">Buscar</button>
+  <ul id="repositories"></ul>
+
+  <script>
+    function getRepositories() {
+      // Obtener el nombre de usuario del input
+      var username = document.getElementById('username').value;
+
+      // Crear una petición HTTP GET a la API de GitHub
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', 'https://api.github.com/users/' + username + '/repos', true);
+
+      // Configurar la respuesta de la petición
+      xhr.onload = function() {
+        // Obtener los datos de la respuesta en formato JSON
+        var data = JSON.parse(this.response);
+
+        // Crear una lista con los nombres de los repositorios
+        var repositoriesList = document.getElementById('repositories');
+        repositoriesList.innerHTML = '';
+        for (var i = 0; i < data.length; i++) {
+          var repository = document.createElement('li');
+          var repositoryLink = document.createElement('a');
+          repositoryLink.href = data[i].html_url;
+          repositoryLink.textContent = data[i].name;
+          repository.appendChild(repositoryLink);
+          repositoriesList.appendChild(repository);
+        }
+      };
+
+      // Enviar la petición
+      xhr.send();
+    }
+  </script>
+</body>
+</html>
